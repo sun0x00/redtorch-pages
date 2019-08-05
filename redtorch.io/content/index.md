@@ -10,7 +10,7 @@ summary: Chinese index.html
 
 *在您下载和使用本项目前,请务必阅读相关协议和注意事项*
 
-<img src="https://raw.githubusercontent.com/sun0x00/RedTorch-Pages/master/content/images/redtorch_20190805024300.png" width="100%" align=center>
+<img src="https://raw.githubusercontent.com/sun0x00/RedTorch-Pages/master/docs/images/redtorch_20190805024300.png" width="100%" align=center>
 
 ## 项目简介
 
