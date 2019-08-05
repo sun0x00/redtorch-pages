@@ -1,0 +1,5 @@
+pelican content
+
+pelican --listen -p 8001
+
+pelican-themes --list 
