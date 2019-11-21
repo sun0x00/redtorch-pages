@@ -1,2 +1,0 @@
-pip install pelican
-pip install markdown
