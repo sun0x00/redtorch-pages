@@ -6,104 +6,121 @@
     <link rel="shortcut icon" href="https://www.mdeditor.com/images/logos/favicon.ico" type="image/x-icon"/>
   </head>
   <body>
-    <h1>redtorch</h1>
+   <h1 id="redtorch">redtorch</h1>
+<p><code>但知行好事，莫要问前程。</code></p>
+<p><strong>在您下载和使用本项目前，请务必阅读相关提示、协议和注意事项。</strong></p>
+<h2 id="-">项目简介</h2>
+<p>项目是基于Kotlin(Java)语言开发的开源量化交易程序开发框架。</p>
+<p>项目仓库地址：<a href="https://github.com/sun0x00/redtorch" title=" https://github.com/sun0x00/redtorch"> https://github.com/sun0x00/redtorch</a></p>
+<h2 id="-">开发语言</h2>
+<p>Kotlin、Java</p>
+<h2 id="-">提示</h2>
+<h3 id="-2-0-0">当前版本2.0.0</h3>
+<p><strong>当前版本尚未充分测试，务必充分审阅测试后使用</strong></p>
+<h4 id="-2-0-0-">关于2.0.0升级的重要提示。</h4>
+<p>本项目自建立均以实际使用需求为导向，经过长时间的使用和总结，决定在2.0.0版本对本项目进行重构和精简。</p>
+<p>由于涉及历史行情数据的维护和读取，作者使用本项目时交易信号大多通过其他程序生成，而后接入本项目进行交易，因此本项目旧版中的许多复杂功能并未得到有效利用。 </p>
+<p>已知常用功能为查询投资组合（账户、持仓）、获取交易过程（委托、成交）、获取基本数据（合约）和订阅行情。</p>
+<p><strong>因此2.0.0版本主要目标是将本项目作为交易管理的核心系统，而非一站式量化系统，增强安全性，增强容错，移除不必要的功能。</strong>重构后，更偏重于对来自不同底层API的数据进行统一管理和监控。</p>
+<ul>
+<li>所有存入Zookeeper的数据使用3DES二次加密脱敏。（安全增强）</li>
+<li>项目使用Kotlin语言重写。（Kotlin语言对Java语言和类库兼容性良好，且对于空指针更为安全）</li>
+<li>web管理服务被移除。（安全增强，技术堆栈精简）</li>
+<li>启动服务器可通过参数决定是否同时启动管理GUI，GUI由JavaFX实现。（易用性增强）</li>
+<li>web交易页面被移除。如有需求建议单独开发。（安全增强）</li>
+<li>操作员（operator）和用户进行合并。（逻辑精简）</li>
+<li>数据传输移除Protobuf，使用RFC 6902作为替换。（同时测试对比了RFC 7396，性能不佳）</li>
+<li>数据同步利用RFC 6902进行差异化操作，移除复杂的RPC over HTTP/WebSocket。</li>
+<li>停止对Python客户端的支持。如有需求仍然可以自行开发。（Python重构测试坑太多）</li>
+<li>移除行情记录功能。（非业务必须功能，常有特殊需求导致稳定性下降）</li>
+<li>移除历史数据访问，K线计算等功能。（功能精简）</li>
+<li><strong>升级到JDK 17+ JavaFX 17+ Gradle 7+</strong></li>
+</ul>
+<h2 id="-">项目文档</h2>
+<p>此项目仅供代码相互学习，不提供文档，相对于旧版本，已经精简了技术堆栈，部分问题可在FAQ查找答案 。</p>
+<h2 id="-">不适用场景</h2>
+<ul>
+<li>模拟账户或者分账户分仓。 <strong>（本项目不存在相关功能，用户功能仅用于限制交易权限，避免跨产品交易安全问题）</strong></li>
+<li>收到Tick-发出Order要求延迟3毫秒以下的高频交易。 <strong>（两次网络转发会造成一定的延迟）</strong></li>
+<li>一站式量化交易开发。 <strong>（需求差异化明显，难以抽象）</strong></li>
+</ul>
+<h2 id="-">开发环境要求</h2>
+<p>基本环境需要JDK 17，项目使用Gradle 7.2作为构建工具。 由于大部分代码为Kotlin，因此建议使用idea作为开发工具。
+默认情况下，无需特殊配置，通过git克隆本项目之后，直接导入Gradle工程即可。</p>
+<h2 id="-">表层文件结构</h2>
+<ul>
+<li>/redtorch<ul>
+<li>/gradle <strong>Gradle wrapper</strong></li>
+<li>/log <strong>用户存放运行日志</strong></li>
+<li>/rt-common <strong>通用模块</strong></li>
+<li>/rt-desktop <strong>JavaFX实现的GUI交易终端模块</strong></li>
+<li>/rt-gateway-api <strong>网关接口</strong></li>
+<li>/rt-gateway-ctp <strong>CTP网关具体实现</strong></li>
+<li>/rt-master <strong>主节点模块，管理会话，用户、网关、节点配置，基本的数据管理</strong></li>
+<li>/rt-slave <strong>从节点模块，承载网关运行的具体实例</strong></li>
+<li>.gitignore <strong>Git配置文件</strong></li>
+<li>build.gradle.kts <strong>Gradle配置（基本配置和一些子项目通用的配置）</strong></li>
+<li>gradlew <strong>Gradle wrapper</strong></li>
+<li>gradlew.bat <strong>Gradle wrapper</strong></li>
+<li>README.md</li>
+<li>settings.gradle.kts <strong>Gradle配置（增加子项目可修改此文件）</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="-">配置和编译</h2>
+<ul>
+<li>将Zookeeper连接字符串配置到rt-master子项目下的resources目录中的application.properties中。</li>
+<li>默认rt-master的端口为9099，如果修改，rt-desktop配置文件应一并修改。</li>
+<li>通过Gradle中的bootJar构建任务可得到支持直接运行的jar文件。</li>
+</ul>
+<h2 id="-">启动运行</h2>
+<ul>
+<li>单独下载运行Zookeeper服务器（单机或集群均可），版本需要与项目依赖中配置的客户端版本对应，当前依赖为3.8.0。</li>
+<li>开发过程中rt-desktop、rt-master、rt-slave均可直接通过main方法启动。</li>
+<li>如果通过bootJar得到jar文件，可通过java -jar &lt;文件名&gt;.jar 命令可直接分别启动，无需其它容器。（例：java -jar rt-master.jar）</li>
+<li>如果在jar文件所在运行目录中存在配置文件application.properties，其配置会默认覆盖打包在jar中的配置文件，这一点将十分便于生产部署，配置分离。</li>
+</ul>
+<h2 id="faq">FAQ</h2>
+<h5 id="-jdk-">能否降低JDK版本？</h5>
+<ul>
+<li>可自行尝试降低，但JavaFX最低要JDK11。</li>
+</ul>
+<h5 id="-">支持哪些操作系统？</h5>
+<ul>
+<li><p>本系统已经在windows和linux中应用。</p>
+</li>
+<li><p>支持MAC，但是请注意，rt-slave承载的网关底层实现可能依赖一些第三方运行库，例如ctp相关的dll和so，这些第三方库不一定支持mac，因此无法完全兼容。</p>
+</li>
+</ul>
+<h5 id="-">如何编写策略？</h5>
+<ul>
+<li>请自行拓展开发。</li>
+</ul>
+<h5 id="-">只能用来做国内期货吗？</h5>
+<ul>
+<li>此项目的网关可自行拓展开发，不限制API类型，证券等数据类型可根据实际需求开发接入对应网关。</li>
+</ul>
+<h5 id="-">系统是否需要每天重启？</h5>
+<ul>
+<li>此项目的主从节点均不需要每日重启（曾有连续运行6000+小时的记录），但请注意，如果遇到经纪商或交易所系统测试，在节假日推送一些时间错误的数据导致主节点中的数据过滤功能故障，或者主节点与zookeeper的连接异常未能自动恢复，则应当重启解决。</li>
+</ul>
+<h5 id="-ctp-api-">不同版本的CTP API是否能在同一个从节点中运行？</h5>
+<ul>
+<li>不可以，CTP版本间会互相冲突。</li>
+</ul>
+<h5 id="-ctp-">如果需要使用某些特定版本的CTP，如何添加？</h5>
+<ul>
+<li>请参考作者其它项目，。</li>
+</ul>
+<h2 id="-license-">协议（License）</h2>
+<p>MIT</p>
+<h1 id="-">重要提示</h1>
+<p><strong>作者不参与何形式的商业支持，任何关于本项目的商业活动或涉及金钱的内容均与作者无关</strong></p>
+<p><strong>用户在遵循MIT协议的同时，如果用户下载、安装、使用本项目中所提供的软件，软件作者对任何原因在使用本项目中提供的软件时可能对用户自己或他人造成的任何形式的损失和伤害不承担任何责任。如果用户不同意上述内容，用户可以自行删除本项目。</strong></p>
+<p><strong>务必严格遵守当地法律法规</strong></p>
+<p><strong>市场莫测 风险自负</strong></p>
+<p><strong>请务必充分理解各类相关风险</strong></p>
 
-    <p><code>但知行好事，莫要问前程。</code></p>
-
-    <p><strong>在您下载和使用本项目前,请务必阅读相关提示、协议和注意事项</strong></p>
-
-    <h2>项目简介</h2>
-
-    <p>项目是基于Kotlin(Java)语言开发的开源量化交易程序开发框架。</p>
-
-    <p>项目仓库地址：<a href="https://github.com/sun0x00/redtorch" title=" https://github.com/sun0x00/redtorch"> https://github.com/sun0x00/redtorch</a></p>
-
-    <h2>开发语言</h2>
-
-    <p>Kotlin、Java</p>
-
-    <h2>提示</h2>
-
-    <h3>当前版本2.0.0</h3>
-
-    <p><strong>当前版本尚未充分测试，务必充分审阅测试后使用</strong></p>
-
-    <h4>关于2.0.0升级的重要提示。</h4>
-
-    <p>本项目自建立均以实际使用需求为导向，经过长时间的使用和总结，决定在2.0.0版本对本项目进行重构和精简。</p>
-
-    <p>基金公司运作过程中，一般按照监管要求保证公平交易，同时为了风险隔离和交易安全，一般账户统一管理，基金经理或
-    其开发的策略独立下达指令，交易部门按权限交易。</p>
-
-    <p>在作者使用本项目的过程中，交易信号大多由各策略负责人通过其他复杂手段生成，而后通过脚本策略形式接入本项目进行交易。
-    因此本项目旧版中的许多复杂功能并未得到有效利用。 </p>
-
-    <p>已知常用功能为查询投资组合（账户、持仓）、获取交易过程（委托、成交）、获取基本数据（合约）和订阅行情。
-    风险监控，交易监控等功能均在这些基础数据上实现。</p>
-
-    <p><strong>因此2.0.0版本主要目标是将本项目作为交易管理的核心系统，而非一站式量化系统，增强安全性，增强容错，移除不必要的功能。</strong></p>
-
-    <ul><li>所有存入Zookeeper的数据使用3DES二次加密脱敏。（安全增强）</li><li>项目使用Kotlin语言重写。（Kotlin语言对Java语言和类库兼容性良好，且对于空指针更为安全）</li><li>web管理服务被移除。（安全增强，技术堆栈精简）</li><li>启动服务器可通过参数决定是否同时启动管理GUI,GUI由JavaFX实现。（易用性增强）</li><li>web交易页面被移除。如有需求建议单独开发。（安全增强）</li><li>操作员（operator）和用户进行合并。（逻辑精简）</li><li>数据传输移除Protobuf，使用RFC 6902作为替换。（同时测试对比了RFC 7396，性能不佳）</li><li>数据同步利用RFC 6902进行差异化操作，移除复杂的RPC over HTTP/WebSocket。</li><li>停止对Python客户端的支持。如有需求仍然可以自行开发。（Python重构测试坑太多）</li><li>移除行情记录功能。（非业务必须功能，常有特殊需求）</li><li>移除历史数据访问，K线计算等功能。（功能精简）</li><li><strong>升级到JDK 16+ JavaFX 16+ Gradle 7+</strong></li></ul>
-
-    <h2>项目文档</h2>
-
-    <p>此项目仅供代码相互学习，不提供文档，相对于旧版本，已经精简了技术堆栈，部分问题可在FAQ查找答案 。</p>
-
-    <h2>不适用场景</h2>
-
-    <ul><li>模拟账户或者分账户分仓 <strong>本项目不存在相关功能，用户功能仅用于限制交易权限，避免跨产品交易安全问题</strong></li><li>收到Tick-发出Order要求延迟3毫秒以下的高频交易 <strong>两次网络转发会造成一定的延迟</strong></li><li>一站式量化交易开发 <strong>一站式太难做了，奇奇怪怪的需求太多，打个比方，10个人可能有5种生成K线的方法8种过滤数据的方法，无法统一集成</strong></li></ul>
-
-    <h2>开发环境要求</h2>
-
-    <p>基本环境需要JDK 16，项目使用Gradle 7作为构建工具。 由于大部分代码为Kotlin，因此建议使用idea作为开发工具。
-    默认情况下，无需特殊配置，通过git克隆本项目之后，直接导入Gradle工程即可。</p>
-
-    <h2>表层文件结构</h2>
-
-    <ul><li>/redtorch<ul><li>/gradle <strong>Gradle wrapper</strong></li><li>/log <strong>用户存放运行日志</strong></li><li>/rt-common <strong>通用模块</strong></li><li>/rt-desktop <strong>JavaFX实现的GUI交易终端模块</strong></li><li>/rt-gateway-api <strong>网关接口</strong></li><li>/rt-gateway-ctp <strong>CTP网关具体实现</strong></li><li>/rt-master <strong>主节点模块，管理会话，用户、网关、节点配置，基本的数据管理</strong></li><li>/rt-slave <strong>从节点模块，承载网关运行的具体实例</strong></li><li>.gitignore <strong>Git配置文件</strong></li><li>build.gradle.kts <strong>Gradle配置（基本配置和一些子项目通用的配置）</strong></li><li>gradlew <strong>Gradle wrapper</strong></li><li>gradlew.bat <strong>Gradle wrapper</strong></li><li>README.md</li><li>settings.gradle.kts <strong>Gradle配置（增加子项目可修改此文件）</strong></li></ul></li></ul>
-
-    <h2>配置和编译</h2>
-
-    <ul><li>将Zookeeper连接字符串配置到rt-master子项目下的resources目录中的application.properties中</li><li>默认rt-master的端口为9099，如果修改，rt-desktop配置文件应一并修改</li><li>通过Gradle中的bootJar构建任务可得到支持直接运行的jar文件</li></ul>
-
-    <h2>启动运行</h2>
-
-    <ul><li>单独下载运行Zookeeper服务器（单机或集群均可），版本需要与项目依赖中配置的客户端版本对应，当前依赖为3.6.2</li><li>开发过程中rt-desktop、rt-master、rt-slave均可直接通过main方法启动</li><li>如果通过bootJar得到jar文件，可通过java -jar &lt;文件名&gt;.jar 命令可直接分别启动，无需其它容器
-    例如 java -jar rt-master.jar</li><li>如果在jar文件所在运行目录中存在配置文件application.properties，其配置会默认覆盖打包在jar中的配置文件，这一点将十分便于生产部署，配置分离。</li></ul>
-
-    <h2>FAQ</h2>
-
-    <h5>能否降低JDK版本？</h5>
-
-    <ul><li>可自行尝试降低，但JavaFX最低要JDK11</li></ul>
-
-    <h5>支持哪些操作系统？</h5>
-
-    <ul><li><p>本系统已经在windows和linux中应用</p></li><li><p>支持MAC，但是请注意，rt-slave承载的网关底层实现可能依赖一些第三方运行库，例如ctp相关的dll和so，这些第三方库不一定支持mac，因此无法完全兼容</p></li></ul>
-
-    <h5>如何编写策略？</h5>
-
-    <ul><li>请自行拓展开发</li></ul>
-
-    <h5>只能用来做国内期货吗？</h5>
-
-    <p>此项目的的网关可自行拓展开发，不限制API类型，证券等数据类型可根据实际需求开发接入对应网关。</p>
-
-    <h2>协议（License）</h2>
-
-    <p>MIT</p>
-
-    <h1>重要提示</h1>
-
-    <p><strong>作者不参与何形式的商业支持，任何关于本项目的商业活动或涉及金钱的内容均与作者无关</strong></p>
-
-    <p><strong>用户在遵循MIT协议的同时，如果用户下载、安装、使用本项目中所提供的软件，软件作者对任何原因在使用本项目中提供的软件时可能对用户自己或他人造成的任何形式的损失和伤害不承担任何责任。如果用户不同意上述内容，用户可以自行删除本项目。</strong></p>
-
-    <p><strong>务必严格遵守当地法律法规</strong></p>
-
-    <p><strong>市场莫测 风险自负</strong></p>
-
-    <p><strong>请务必充分理解各类相关风险</strong></p>
 
   </body>
 </html>
